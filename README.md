@@ -78,7 +78,7 @@ Or simply run the app once; it will auto-create tables.
 
 python app1.py
 
-Visit http://127.0.0.1:5000/ in your browser.
+Visit the generated link (in terminal) in your browser.
 Project Structure
 
 |-- app1.py             # Main Flask application (routes & logic)
