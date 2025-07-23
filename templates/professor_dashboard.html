@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="fade-in text-white py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Professor Dashboard</h2>
+        <span class="text-info">Welcome, {{ session.username }}!</span>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+        <a href="{{ url_for('create_quiz') }}" class="btn btn-outline-success neon-button">
+            <i class="bi bi-plus-circle"></i> Create New Quiz
+        </a>
+    </div>
+
+    <h4 class="text-light mb-3">Your Quizzes</h4>
+    {% if quizzes %}
+    <ul class="list-group list-group-flush bg-dark shadow-lg rounded">
+        {% for quiz in quizzes %}
+        <li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary">
+            <div>
+                <strong class="text-white">{{ quiz.title }}</strong><br>
+                <small class="text-muted">Created: {{ quiz.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+            <a href="{{ url_for('view_quiz_results', quiz_id=quiz.id) }}" class="btn btn-sm btn-outline-info">
+                View Results
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-dark border-info text-info mt-3">
+        You haven't created any quizzes yet.
+    </div>
+    {% endif %}
+</div>
+
+<style>
+body {
+    background-color: #121212;
+    color: #fff;
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.neon-button {
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+    text-shadow: 0 0 5px #00ffcc;
+    box-shadow: 0 0 10px #00ffcc40;
+    transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+    background-color: #00ffcc20;
+    box-shadow: 0 0 20px #00ffcc80;
+    color: #fff;
+}
+</style>
+{% endblock %}

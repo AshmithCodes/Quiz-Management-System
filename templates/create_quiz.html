@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Create New Quiz</h2>
+
+<form method="POST" action="{{ url_for('create_quiz') }}" id="quiz-form">
+    <div class="mb-3">
+        <label for="quiz_title" class="form-label">Quiz Title</label>
+        <input type="text" class="form-control" id="quiz_title" name="quiz_title" required>
+    </div>
+
+    <hr>
+    <h4>Questions</h4>
+    <div id="questions-container">
+        <div class="question-block border p-3 mb-3" id="question-block-1">
+             <h5>Question 1</h5>
+             <div class="mb-3">
+                 <label for="q1_text" class="form-label">Question Text</label>
+                 <textarea class="form-control" id="q1_text" name="q1_text" rows="2" required></textarea>
+             </div>
+             <div class="row g-3">
+                 <div class="col-md-6 mb-2">
+                     <label for="q1_opt_a" class="form-label">Option A</label>
+                     <input type="text" class="form-control" id="q1_opt_a" name="q1_opt_a" required>
+                 </div>
+                 <div class="col-md-6 mb-2">
+                     <label for="q1_opt_b" class="form-label">Option B</label>
+                     <input type="text" class="form-control" id="q1_opt_b" name="q1_opt_b" required>
+                 </div>
+                 <div class="col-md-6 mb-2">
+                     <label for="q1_opt_c" class="form-label">Option C</label>
+                     <input type="text" class="form-control" id="q1_opt_c" name="q1_opt_c" required>
+                 </div>
+                 <div class="col-md-6 mb-2">
+                     <label for="q1_opt_d" class="form-label">Option D</label>
+                     <input type="text" class="form-control" id="q1_opt_d" name="q1_opt_d" required>
+                 </div>
+             </div>
+             <div class="mb-3">
+                 <label for="q1_correct" class="form-label">Correct Option</label>
+                 <select class="form-select" id="q1_correct" name="q1_correct" required>
+                     <option selected disabled value="">Choose...</option>
+                     <option value="a">A</option>
+                     <option value="b">B</option>
+                     <option value="c">C</option>
+                     <option value="d">D</option>
+                 </select>
+             </div>
+        </div>
+        </div>
+
+    <button type="button" class="btn btn-secondary mb-3" id="add-question-btn">Add Another Question</button>
+    <br>
+    <button type="submit" class="btn btn-primary">Create Quiz</button>
+</form>
+
+<script>
+    let questionCount = 1;
+    const questionsContainer = document.getElementById('questions-container');
+    const addQuestionBtn = document.getElementById('add-question-btn');
+
+    addQuestionBtn.addEventListener('click', () => {
+        questionCount++;
+        const newQuestionBlock = document.createElement('div');
+        newQuestionBlock.classList.add('question-block', 'border', 'p-3', 'mb-3');
+        newQuestionBlock.id = `question-block-${questionCount}`;
+        newQuestionBlock.innerHTML = `
+            <h5>Question ${questionCount}</h5>
+            <div class="mb-3">
+                <label for="q${questionCount}_text" class="form-label">Question Text</label>
+                <textarea class="form-control" id="q${questionCount}_text" name="q${questionCount}_text" rows="2" required></textarea>
+            </div>
+            <div class="row g-3">
+                 <div class="col-md-6 mb-2">
+                     <label for="q${questionCount}_opt_a" class="form-label">Option A</label>
+                     <input type="text" class="form-control" id="q${questionCount}_opt_a" name="q${questionCount}_opt_a" required>
+                 </div>
+                 <div class="col-md-6 mb-2">
+                     <label for="q${questionCount}_opt_b" class="form-label">Option B</label>
+                     <input type="text" class="form-control" id="q${questionCount}_opt_b" name="q${questionCount}_opt_b" required>
+                 </div>
+                 <div class="col-md-6 mb-2">
+                     <label for="q${questionCount}_opt_c" class="form-label">Option C</label>
+                     <input type="text" class="form-control" id="q${questionCount}_opt_c" name="q${questionCount}_opt_c" required>
+                 </div>
+                 <div class="col-md-6 mb-2">
+                     <label for="q${questionCount}_opt_d" class="form-label">Option D</label>
+                     <input type="text" class="form-control" id="q${questionCount}_opt_d" name="q${questionCount}_opt_d" required>
+                 </div>
+            </div>
+            <div class="mb-3">
+                <label for="q${questionCount}_correct" class="form-label">Correct Option</label>
+                <select class="form-select" id="q${questionCount}_correct" name="q${questionCount}_correct" required>
+                    <option selected disabled value="">Choose...</option>
+                    <option value="a">A</option>
+                    <option value="b">B</option>
+                    <option value="c">C</option>
+                    <option value="d">D</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-sm btn-danger remove-question-btn" data-block-id="${questionCount}">Remove Question</button>
+        `;
+        questionsContainer.appendChild(newQuestionBlock);
+
+        // Add event listener for the new remove button
+        addRemoveButtonListener(newQuestionBlock.querySelector('.remove-question-btn'));
+    });
+
+    // Function to add event listener to remove buttons
+    function addRemoveButtonListener(button) {
+        button.addEventListener('click', (event) => {
+            const blockId = event.target.getAttribute('data-block-id');
+            const blockToRemove = document.getElementById(`question-block-${blockId}`);
+            if (blockToRemove && questionsContainer.children.length > 1) { // Prevent removing the last question
+                blockToRemove.remove();
+                // Optional: Renumber questions if needed, though backend handles it by name
+            } else {
+                 alert('You cannot remove the only question.');
+            }
+        });
+    }
+
+    // Add listener to the initial remove button if it exists (it doesn't initially, added dynamically)
+    // If you want the first question to be removable, add a remove button to it initially and call:
+    // const initialRemoveBtn = document.querySelector('#question-block-1 .remove-question-btn');
+    // if (initialRemoveBtn) addRemoveButtonListener(initialRemoveBtn);
+
+</script>
+
+{% endblock %}
